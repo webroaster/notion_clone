@@ -1,4 +1,4 @@
-import { IconButton, TextField } from "@mui/material"
+import { Button, IconButton, Modal, TextField, Typography } from "@mui/material"
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import { Box } from "@mui/system"
@@ -15,6 +15,7 @@ const Memo = () => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [icon, setIcon] = useState("")
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const { memoId } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -69,6 +70,13 @@ const Memo = () => {
   }
 
   // メモの削除
+  const handleOpenDeleteModal = () => {
+    setOpenDeleteModal(true)
+  }
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false)
+  }
+
   const deleteMemo = async () => {
     try {
       const deletedMemo = await memoApi.delete(memoId)
@@ -84,6 +92,8 @@ const Memo = () => {
       }
     } catch (err) {
       alert(err)
+    } finally {
+      handleCloseDeleteModal()
     }
   }
 
@@ -114,10 +124,62 @@ const Memo = () => {
         <IconButton>
           <StarBorderOutlinedIcon />
         </IconButton>
-        <IconButton onClick={deleteMemo}>
+        <IconButton onClick={handleOpenDeleteModal}>
           <DeleteOutlineIcon variant='outlined' color='error' />
         </IconButton>
       </Box>
+      <Modal
+        open={openDeleteModal}
+        onClose={handleCloseDeleteModal}
+        aria-labelledby='modal-modal-title'
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "20%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            p: 4,
+          }}
+        >
+          <Typography
+            id='modal-modal-title'
+            variant='h6'
+            component='h3'
+            marginBottom='30px'
+            textAlign='center'
+            fontWeight='bold'
+          >
+            メモを削除しますか？
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gridGap: "10px",
+            }}
+          >
+            <Button
+              fullWidth
+              variant='outlined'
+              onClick={handleCloseDeleteModal}
+            >
+              キャンセル
+            </Button>
+            <Button
+              fullWidth
+              variant='outlined'
+              color='error'
+              onClick={deleteMemo}
+            >
+              削除する
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <Box sx={{ padding: "10px 50px" }}>
         <Box>
           <EmojiPicker icon={icon} onChange={onIconChange} />
