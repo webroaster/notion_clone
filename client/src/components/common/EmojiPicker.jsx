@@ -30,7 +30,7 @@ const EmojiPicker = (props) => {
       <Typography
         variant='h3'
         fontWeight='bold'
-        sx={{ cursor: "pointer" }}
+        sx={{ cursor: "pointer", width: "fit-content" }}
         onClick={showPicker}
       >
         {selectedEmoji}

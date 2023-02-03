@@ -1,6 +1,7 @@
 import { Button, IconButton, Modal, TextField, Typography } from "@mui/material"
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+import TextareaAutosize from "@mui/base/TextareaAutosize"
 import { Box } from "@mui/system"
 import React from "react"
 import { useEffect } from "react"
@@ -189,6 +190,8 @@ const Memo = () => {
             placeholder='無題'
             variant='outlined'
             fullWidth
+            multiline
+            inputProps={{ maxLength: 120 }}
             sx={{
               ".MuiOutlinedInput-input": { padding: 0 },
               ".MuiOutlinedInput-notchedOutline": { border: "none" },
@@ -205,6 +208,7 @@ const Memo = () => {
             placeholder='追加'
             variant='outlined'
             fullWidth
+            multiline
             sx={{
               ".MuiOutlinedInput-input": { padding: 0 },
               ".MuiOutlinedInput-notchedOutline": { border: "none" },
