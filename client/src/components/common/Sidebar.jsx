@@ -138,7 +138,17 @@ const Sidebar = () => {
             to={`memo/${item._id}`}
             selected={i === activeIndex}
           >
-            <Typography fontSize='small'>
+            <Typography
+              fontSize='small'
+              sx={{
+                width: "100%",
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 2,
+                overflow: "hidden",
+                wordBreak: "break-all",
+              }}
+            >
               {item.icon}
               {item.title}
             </Typography>
