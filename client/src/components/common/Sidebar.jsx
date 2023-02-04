@@ -1,68 +1,64 @@
-import {
-  Box,
-  Drawer,
-  IconButton,
-  List,
-  ListItemButton,
-  Typography,
-} from "@mui/material"
-import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined"
-import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined"
-import React from "react"
-import assets from "../../assets"
-import { useNavigate } from "react-router"
-import { Link, useParams } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
-import { useEffect } from "react"
-import memoApi from "../../api/memoApi"
-import { setMemo } from "../../redux/features/memoSlice"
-import { useState } from "react"
+import { Box, Drawer, IconButton, List, ListItemButton, Typography } from "@mui/material";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
+import React from "react";
+import assets from "../../assets";
+import { useNavigate } from "react-router";
+import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import memoApi from "../../api/memoApi";
+import { setMemo } from "../../redux/features/memoSlice";
+import { useState } from "react";
 
 const Sidebar = () => {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const { memoId } = useParams()
-  const user = useSelector((state) => state.user.value)
-  const memos = useSelector((state) => state.memo.value)
+  const [activeIndex, setActiveIndex] = useState(0);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { memoId } = useParams();
+  const user = useSelector((state) => state.user.value);
+  const memos = useSelector((state) => state.memo.value);
 
   const logout = () => {
-    localStorage.removeItem("token")
-    navigate("/login")
-  }
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
+  // メモ一覧取得
   useEffect(() => {
     const getMemos = async () => {
       try {
-        const res = await memoApi.getAll()
-        dispatch(setMemo(res))
+        const res = await memoApi.getAll();
+        dispatch(setMemo(res));
       } catch (err) {
-        alert(err)
+        alert(err);
       }
-    }
-    getMemos()
-  }, [dispatch])
+    };
+    getMemos();
+  }, [dispatch]);
 
+  // 開いているメモのハイライト
   useEffect(() => {
-    const activeMemoIndex = memos.findIndex((e) => e._id === memoId)
-    setActiveIndex(activeMemoIndex)
-  }, [navigate])
+    const activeMemoIndex = memos.findIndex((e) => e._id === memoId);
+    setActiveIndex(activeMemoIndex);
+  }, [navigate]);
 
+  // メモの追加
   const addMemo = async () => {
     try {
-      const res = await memoApi.create()
-      const newMemos = [...memos, res]
-      dispatch(setMemo(newMemos))
-      navigate(`/memo/${res._id}`)
+      const res = await memoApi.create();
+      const newMemos = [...memos, res];
+      dispatch(setMemo(newMemos));
+      navigate(`/memo/${res._id}`);
     } catch (err) {
-      alert(err)
+      alert(err);
     }
-  }
+  };
 
   return (
     <Drawer
       container={window.document.body}
-      variant='permanent'
+      variant="permanent"
       open={true}
       sx={{ width: 250, height: "100vh" }}
     >
@@ -82,11 +78,11 @@ const Sidebar = () => {
               justifyContent: "space-between",
             }}
           >
-            <Typography variant='body2' fontWeight='bold'>
+            <Typography variant="body2" fontWeight="bold">
               {user.username}
             </Typography>
             <IconButton onClick={logout}>
-              <LogoutOutlinedIcon fontSize='small' />
+              <LogoutOutlinedIcon fontSize="small" />
             </IconButton>
           </Box>
         </ListItemButton>
@@ -102,7 +98,7 @@ const Sidebar = () => {
               justifyContent: "space-between",
             }}
           >
-            <Typography variant='body2' fontWeight='bold'>
+            <Typography variant="body2" fontWeight="bold">
               お気に入り
             </Typography>
             <IconButton></IconButton>
@@ -120,11 +116,11 @@ const Sidebar = () => {
               justifyContent: "space-between",
             }}
           >
-            <Typography variant='body2' fontWeight='bold'>
+            <Typography variant="body2" fontWeight="bold">
               プライベート
             </Typography>
             <IconButton onClick={() => addMemo()}>
-              <AddBoxOutlinedIcon fontSize='small' />
+              <AddBoxOutlinedIcon fontSize="small" />
             </IconButton>
           </Box>
         </ListItemButton>
@@ -139,7 +135,7 @@ const Sidebar = () => {
             selected={i === activeIndex}
           >
             <Typography
-              fontSize='small'
+              fontSize="small"
               sx={{
                 width: "100%",
                 display: "-webkit-box",
@@ -156,7 +152,7 @@ const Sidebar = () => {
         ))}
       </List>
     </Drawer>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
