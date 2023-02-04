@@ -1,30 +1,30 @@
-import { Box } from "@mui/material"
-import React, { useEffect } from "react"
-import { Outlet, useNavigate } from "react-router-dom"
-import authUtils from "../../utils/authUtils"
-import Sidebar from "../common/Sidebar"
-import { useDispatch } from "react-redux"
-import { setUser } from "../../redux/features/userSlice"
+import { Box } from "@mui/material";
+import React, { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import authUtils from "../../utils/authUtils";
+import Sidebar from "../common/Sidebar";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/features/userSlice";
 
 const AppLayout = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // JWTを持っているのか確認
     const checkAuth = async () => {
       //認証チェック
-      const user = await authUtils.isAuthenticated()
+      const user = await authUtils.isAuthenticated();
 
       if (!user) {
-        navigate("/login")
+        navigate("/login");
       } else {
         // ユーザーを保存
-        dispatch(setUser(user))
+        dispatch(setUser(user));
       }
-    }
-    checkAuth()
-  }, [navigate])
+    };
+    checkAuth();
+  }, [navigate]);
 
   return (
     <div>
@@ -35,7 +35,7 @@ const AppLayout = () => {
         </Box>
       </Box>
     </div>
-  )
-}
+  );
+};
 
-export default AppLayout
+export default AppLayout;

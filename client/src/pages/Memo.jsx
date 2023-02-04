@@ -1,115 +1,116 @@
-import { Button, IconButton, Modal, TextField, Typography } from "@mui/material"
-import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined"
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
-import { Box } from "@mui/system"
-import React from "react"
-import { useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import memoApi from "../api/memoApi"
-import { useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { setMemo } from "../redux/features/memoSlice"
-import EmojiPicker from "../components/common/EmojiPicker"
+import { Button, IconButton, Modal, TextField, Typography } from "@mui/material";
+import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Box } from "@mui/system";
+import React from "react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import memoApi from "../api/memoApi";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setMemo } from "../redux/features/memoSlice";
+import EmojiPicker from "../components/common/EmojiPicker";
 
 const Memo = () => {
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [icon, setIcon] = useState("")
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const { memoId } = useParams()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const memos = useSelector((state) => state.memo.value)
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [icon, setIcon] = useState("");
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const { memoId } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const memos = useSelector((state) => state.memo.value);
 
   // 1件のメモを取得
   useEffect(() => {
     const getMemo = async () => {
       try {
-        const res = await memoApi.getOne(memoId)
-        setTitle(res.title)
-        setDescription(res.description)
-        setIcon(res.icon)
+        const res = await memoApi.getOne(memoId);
+        setTitle(res.title);
+        setDescription(res.description);
+        setIcon(res.icon);
       } catch (err) {
-        alert(err)
+        alert(err);
       }
-    }
-    getMemo()
-  }, [memoId])
+    };
+    getMemo();
+  }, [memoId]);
 
-  let timer
-  const timeout = 500
+  let timer;
+  const timeout = 500;
 
   // メモのタイトルを更新
   const updateTitle = async (e) => {
-    clearTimeout(timer)
-    const newTitle = e.target.value
-    setTitle(newTitle)
+    clearTimeout(timer);
+    const newTitle = e.target.value;
+    setTitle(newTitle);
 
     timer = setTimeout(async () => {
       try {
-        await memoApi.update(memoId, { title: newTitle })
+        await memoApi.update(memoId, { title: newTitle });
       } catch (err) {
-        alert(err)
+        alert(err);
       }
-    }, timeout)
-  }
+    }, timeout);
+  };
 
   // メモの説明を更新
   const updateDescription = async (e) => {
-    clearTimeout(timer)
-    const newDescription = e.target.value
-    setDescription(newDescription)
+    clearTimeout(timer);
+    const newDescription = e.target.value;
+    setDescription(newDescription);
 
     timer = setTimeout(async () => {
       try {
-        await memoApi.update(memoId, { description: newDescription })
+        await memoApi.update(memoId, { description: newDescription });
       } catch (err) {
-        alert(err)
+        alert(err);
       }
-    }, timeout)
-  }
+    }, timeout);
+  };
+
+  //
+  const handleOpenDeleteModal = () => {
+    setOpenDeleteModal(true);
+  };
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+  };
 
   // メモの削除
-  const handleOpenDeleteModal = () => {
-    setOpenDeleteModal(true)
-  }
-  const handleCloseDeleteModal = () => {
-    setOpenDeleteModal(false)
-  }
-
   const deleteMemo = async () => {
     try {
-      const deletedMemo = await memoApi.delete(memoId)
-      console.log(deletedMemo)
+      const deletedMemo = await memoApi.delete(memoId);
+      console.log(deletedMemo);
 
-      const newMemos = memos.filter((e) => e._id !== memoId)
-      dispatch(setMemo(newMemos))
+      const newMemos = memos.filter((e) => e._id !== memoId);
+      dispatch(setMemo(newMemos));
 
       if (newMemos.length === 0) {
-        navigate("/memo")
+        navigate("/memo");
       } else {
-        navigate(`/memo/${newMemos[0]._id}`)
+        navigate(`/memo/${newMemos[0]._id}`);
       }
     } catch (err) {
-      alert(err)
+      alert(err);
     } finally {
-      handleCloseDeleteModal()
+      handleCloseDeleteModal();
     }
-  }
+  };
 
   // メモのアイコンを更新
   const onIconChange = async (newIcon) => {
-    let temp = [...memos]
-    const index = temp.findIndex((e) => e._id === memoId)
-    temp[index] = { ...temp[index], icon: newIcon }
-    setIcon(newIcon)
-    dispatch(setMemo(temp))
+    let temp = [...memos];
+    const index = temp.findIndex((e) => e._id === memoId);
+    temp[index] = { ...temp[index], icon: newIcon };
+    setIcon(newIcon);
+    dispatch(setMemo(temp));
     try {
-      await memoApi.update(memoId, { icon: newIcon })
+      await memoApi.update(memoId, { icon: newIcon });
     } catch (err) {
-      alert(err)
+      alert(err);
     }
-  }
+  };
 
   return (
     <>
@@ -125,13 +126,13 @@ const Memo = () => {
           <StarBorderOutlinedIcon />
         </IconButton>
         <IconButton onClick={handleOpenDeleteModal}>
-          <DeleteOutlineIcon variant='outlined' color='error' />
+          <DeleteOutlineIcon variant="outlined" color="error" />
         </IconButton>
       </Box>
       <Modal
         open={openDeleteModal}
         onClose={handleCloseDeleteModal}
-        aria-labelledby='modal-modal-title'
+        aria-labelledby="modal-modal-title"
       >
         <Box
           sx={{
@@ -145,12 +146,12 @@ const Memo = () => {
           }}
         >
           <Typography
-            id='modal-modal-title'
-            variant='h6'
-            component='h3'
-            marginBottom='30px'
-            textAlign='center'
-            fontWeight='bold'
+            id="modal-modal-title"
+            variant="h6"
+            component="h3"
+            marginBottom="30px"
+            textAlign="center"
+            fontWeight="bold"
           >
             メモを削除しますか？
           </Typography>
@@ -162,19 +163,10 @@ const Memo = () => {
               gridGap: "10px",
             }}
           >
-            <Button
-              fullWidth
-              variant='outlined'
-              onClick={handleCloseDeleteModal}
-            >
+            <Button fullWidth variant="outlined" onClick={handleCloseDeleteModal}>
               キャンセル
             </Button>
-            <Button
-              fullWidth
-              variant='outlined'
-              color='error'
-              onClick={deleteMemo}
-            >
+            <Button fullWidth variant="outlined" color="error" onClick={deleteMemo}>
               削除する
             </Button>
           </Box>
@@ -186,8 +178,8 @@ const Memo = () => {
           <TextField
             onChange={updateTitle}
             value={title}
-            placeholder='無題'
-            variant='outlined'
+            placeholder="無題"
+            variant="outlined"
             fullWidth
             multiline
             inputProps={{ maxLength: 120 }}
@@ -204,8 +196,8 @@ const Memo = () => {
           <TextField
             onChange={updateDescription}
             value={description}
-            placeholder='追加'
-            variant='outlined'
+            placeholder="追加"
+            variant="outlined"
             fullWidth
             multiline
             sx={{
@@ -216,7 +208,7 @@ const Memo = () => {
         </Box>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default Memo
+export default Memo;
