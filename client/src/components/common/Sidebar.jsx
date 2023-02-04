@@ -35,7 +35,7 @@ const Sidebar = () => {
       }
     };
     getMemos();
-  }, [dispatch]);
+  }, [memos]);
 
   // 開いているメモのハイライト
   useEffect(() => {

@@ -37,7 +37,7 @@ const Memo = () => {
   }, [memoId]);
 
   let timer;
-  const timeout = 500;
+  const timeout = 1500;
 
   // メモのタイトルを更新
   const updateTitle = async (e) => {
@@ -100,16 +100,20 @@ const Memo = () => {
 
   // メモのアイコンを更新
   const onIconChange = async (newIcon) => {
-    let temp = [...memos];
-    const index = temp.findIndex((e) => e._id === memoId);
-    temp[index] = { ...temp[index], icon: newIcon };
-    setIcon(newIcon);
-    dispatch(setMemo(temp));
-    try {
-      await memoApi.update(memoId, { icon: newIcon });
-    } catch (err) {
-      alert(err);
-    }
+    clearTimeout(timer);
+
+    timer = setTimeout(async () => {
+      let temp = [...memos];
+      const index = temp.findIndex((e) => e._id === memoId);
+      temp[index] = { ...temp[index], icon: newIcon };
+      setIcon(newIcon);
+      dispatch(setMemo(temp));
+      try {
+        await memoApi.update(memoId, { icon: newIcon });
+      } catch (err) {
+        alert(err);
+      }
+    }, timeout);
   };
 
   return (
